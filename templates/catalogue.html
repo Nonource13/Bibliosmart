@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Catalogue</title>
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e6ecf5;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      overflow-y: scroll;
+    }
+
+    body > div {
+      direction: ltr;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e6ecf5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8b9dc3;
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #607d8b;
+    }
+
+    .navbar-custom {
+      background-color: white;
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 2rem;
+    }
+
+    .navbar-custom a {
+      margin-right: 20px;
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .book-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    .book-card {
+      width: 200px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .book-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .book-card h5 {
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .book-card p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .book-card .btn {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ==== Chatbot CSS ==== */
+    #chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      font-family: Arial, sans-serif;
+    }
+
+    #chat-toggle {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      font-size: 24px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    #chatbox {
+      display: none;
+      flex-direction: column;
+      width: 300px;
+      height: 400px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      overflow: hidden;
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+    }
+
+    #chat-header {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    #chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    #chat-input {
+      border: none;
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <nav class="navbar navbar-custom d-flex flex-wrap">
+      <div class="d-flex flex-wrap align-items-center">
+        <a href="#">Abonnement</a>
+        <a href="#">Paiement</a>
+        <a href="#">Recommandation</a>
+        {% if 'utilisateur_id' in session %}
+          <a href="{{ url_for('logout') }}">Se déconnecter</a>
+        {% else %}
+          <a href="{{ url_for('login_lecteur') }}">Connexion</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2 class="text-center my-4">Tous les livres disponibles</h2>
+      <div class="book-grid">
+        {% for livre in livres %}
+        <div class="book-card">
+          <img src="{{ url_for('static', filename='uploads/' + (livre.image or 'default.jpg')) }}" alt="{{ livre.titre }}">
+          <h5>{{ livre.titre }}</h5>
+          <p>{{ livre.auteur }}</p>
+          <p>{{ livre.categorie }}</p>
+          <p>{{ 'Disponible' if livre.disponible else 'Indisponible' }}</p>
+
+          {% if 'utilisateur_id' in session %}
+            <form method="POST" action="{{ url_for('reserver_livre', livre_id=livre.id) }}">
+              <button type="submit" class="btn btn-outline-success btn-sm mt-1">Réserver</button>
+            </form>
+          {% else %}
+            <a href="{{ url_for('login_lecteur') }}" class="btn btn-warning btn-sm">Connectez-vous pour réserver</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ==== Chatbot HTML ==== -->
+  <div id="chatbot-container">
+    <div id="chatbox">
+      <div id="chat-header">🤖 BiblioBot</div>
+      <div id="chat-messages"></div>
+      <input type="text" id="chat-input" placeholder="Posez une question..." />
+    </div>
+    <button id="chat-toggle">💬</button>
+  </div>
+
+  <!-- ==== Chatbot Script ==== -->
+  <script>
+    const toggleBtn = document.getElementById("chat-toggle");
+    const chatbox = document.getElementById("chatbox");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("chat-input");
+
+    toggleBtn.onclick = () => {
+      chatbox.style.display = chatbox.style.display === "none" ? "flex" : "none";
+    };
+
+    chatInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const message = chatInput.value.trim();
+        if (message) {
+          chatMessages.innerHTML += `<div><strong>Vous:</strong> ${message}</div>`;
+          chatInput.value = "";
+
+          fetch("/chatbot", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: message })
+          })
+          .then(response => response.json())
+          .then(data => {
+            chatMessages.innerHTML += `<div><strong>BiblioBot:</strong> ${data.response}</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          });
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

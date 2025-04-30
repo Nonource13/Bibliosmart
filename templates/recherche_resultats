@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Résultats de recherche</title>
+</head>
+<body>
+  <h2>Résultats pour "{{ query }}"</h2>
+
+  {% if livres %}
+    <ul>
+      {% for livre in livres %}
+        <li>{{ livre.titre }} par {{ livre.auteur }} - {{ livre.categorie }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Aucun résultat trouvé.</p>
+  {% endif %}
+
+  <a href="{{ url_for('home') }}">← Retour à l'accueil</a>
+</body>
+</html>

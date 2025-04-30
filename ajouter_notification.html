@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Ajouter Notification</title></head>
+<body>
+  <h2>Nouvelle notification</h2>
+  <form method="POST">
+    Titre: <input type="text" name="titre"><br>
+    Message: <textarea name="contenu"></textarea><br>
+    <input type="submit" value="Envoyer">
+  </form>
+  <a href="{{ url_for('espace_bibliothecaire') }}">⬅ Retour</a>
+</body>
+</html>

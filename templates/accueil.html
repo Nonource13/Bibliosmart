@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenue sur BiblioSmart</title>
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/main2.css') }}" rel="stylesheet">
+  <style>
+    body {
+      background: url("{{ url_for('static', filename='photo/background1.png') }}") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      color: rgba(194, 114, 39, 0.55);
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-image: inherit;
+      background-size: inherit;
+      background-position: inherit;
+      filter: blur(8px);
+      z-index: -1;
+    }
+
+    /* 🎞️ Animation fade-in */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .transparent-card {
+      background-color: rgba(27, 25, 25, 0.77);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 4px rgba(194, 114, 39, 0.55);
+      z-index: 1;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .btn {
+      font-size: 1.1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    a {
+      text-decoration: none !important;
+      color: inherit;
+    }
+
+    a.btn {
+      color: rgba(194, 114, 39, 0.55);
+    }
+
+    /* 🖼️ Logo style */
+    .logo {
+      width: 80px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="transparent-card text-center">
+    <!-- 🖼️ Logo livre -->
+    <img src="{{ url_for('static', filename='photo/logo3.jpg') }}" alt="Logo BiblioSmart" class="logo">
+
+    <h1 class="mb-2 text-white">Bienvenue sur <strong>BiblioSmart</strong></h1>
+    <p class="mb-2 text-white">Vous êtes:</p>
+    <form>
+      <!-- 🔘 Boutons améliorés -->
+      <a href="{{ url_for('register_bibliothecaire') }}" class="btn btn-outline-light w-100">Bibliothécaire</a>
+      <a href="{{ url_for('catalogue') }}" class="btn btn-outline-light w-100">Lecteur</a>
+    </form>
+  </div>
+</body>
+</html>

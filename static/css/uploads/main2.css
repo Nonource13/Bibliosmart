@@ -1,0 +1,53 @@
+
+    body {
+      background: url("../css/photo/background1.png") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+
+      /* Centrage total */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-image: inherit;
+      background-size: inherit;
+      background-position: inherit;
+      filter: blur(8px);
+      z-index: -1;
+    }
+
+    .transparent-card {
+      background-color: rgba(27, 25, 25, 0.77);
+      padding: 2rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 4px rgba(211, 220, 40, 0.55);
+      z-index: 1;
+      width: 40%;
+      height: 40%;
+      max-width: 300px;
+      border-radius: 10px;
+      padding: 20px;
+  
+  
+    }
+
+    .btn {
+      font-size: 1.1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }

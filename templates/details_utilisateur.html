@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détails Utilisateur</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1a237e;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    h2, h3 {
+      color: #1a237e;
+      margin-top: 0;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    a.btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 15px;
+      background-color: #1a237e;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    a.btn:hover {
+      background-color: #0d144d;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Détails de l'utilisateur</h2>
+</header>
+
+<div class="container">
+  <p><strong>👤 Nom :</strong> {{ utilisateur.nom }}</p>
+  <p><strong>📧 Email :</strong> {{ utilisateur.email }}</p>
+
+  <h3>📚 Livres empruntés :</h3>
+  {% if emprunts %}
+    <ul>
+      {% for emprunt in emprunts %}
+        <li>
+          📖 <strong>ID Livre :</strong> {{ emprunt.livre_id }} <br>
+          🗓️ <strong>Date d'emprunt :</strong> {{ emprunt.date_emprunt }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Aucun emprunt enregistré.</p>
+  {% endif %}
+
+  <a href="{{ url_for('espace_bibliothecaire') }}" class="btn">⬅️ Retour à l'espace bibliothécaire</a>
+</div>
+
+</body>
+</html>

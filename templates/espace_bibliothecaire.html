@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Espace Bibliothécaire</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url("{{ url_for('static', filename='photo/back5.png') }}") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: rgba(26, 35, 126, 0.95);
+      color: white;
+      padding: 20px 30px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: auto;
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 20px;
+    }
+
+    .section {
+      background-color: rgba(255, 255, 255, 0.93);
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+
+    .section:hover {
+      transform: scale(1.01);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 8px;
+      color: #1a237e;
+      font-size: 20px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    a {
+      color: #1a237e;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      background-color: #1a237e;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .btn-danger {
+      color: white;
+      background-color: #d32f2f;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-danger:hover {
+      background-color: #b71c1c;
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+      flex: 1;
+      text-align: center;
+      min-width: 180px;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+
+    /* Scroll to top */
+    #scrollTopBtn {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #1a237e;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 1000;
+    }
+
+    #scrollTopBtn:hover {
+      background-color: #0d144f;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Bienvenue dans l’Espace Bibliothécaire</h1>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <h2>📘 Gestion des livres</h2>
+    <a href="{{ url_for('ajouter_livre') }}" class="btn">➕ Ajouter un livre</a>
+    <ul>
+      {% for livre in livres %}
+        <li>
+          <strong>{{ livre.titre }}</strong> - {{ livre.auteur }}
+          [<a href="{{ url_for('modifier_livre', livre_id=livre.id) }}">Modifier</a> |
+          <form action="{{ url_for('supprimer_livre', livre_id=livre.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn-danger">Supprimer</button>
+          </form>]
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>👤 Utilisateurs</h2>
+    <ul>
+      {% for user in utilisateurs %}
+        <li>{{ user.nom }} ({{ user.email }}) 
+        [<a href="{{ url_for('details_utilisateur', id=user.id) }}">Voir détails</a>]</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>📄 Emprunts</h2>
+    {% if emprunts %}
+      <ul>
+        {% for emp in emprunts %}
+          <li>ID Utilisateur: {{ emp.utilisateur_id }} → Livre ID {{ emp.livre_id }} le {{ emp.date_emprunt }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aucun emprunt enregistré.</p>
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>💰 Paiements</h2>
+    {% if paiements %}
+      <ul>
+        {% for p in paiements %}
+          <li>{{ p.utilisateur.email }} a payé {{ p.montant }} € le {{ p.date_paiement }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aucun paiement.</p>
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>📊 Statistiques</h2>
+    <div class="stats">
+      <div class="stat-box">📚 Total livres : {{ total_livres }}</div>
+      <div class="stat-box">📖 Disponibles : {{ livres_disponibles }}</div>
+      <div class="stat-box">📦 Emprunts : {{ total_emprunts }}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🔥 Livres les plus empruntés</h2>
+    {% if top_livre_infos %}
+      <ul>
+        {% for livre, nb in top_livre_infos %}
+          <li><strong>{{ livre.titre }}</strong> – {{ nb }} emprunts</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aucun livre encore emprunté.</p>
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>⚠️ Pénalités en cas de retard</h2>
+    {% if penalites %}
+      <ul>
+        {% for user_id, montant in penalites.items() %}
+          {% set user = utilisateurs | selectattr('id', 'equalto', user_id) | list | first %}
+          <li>{{ user.nom }} ({{ user.email }}) : <strong class="danger">{{ montant }} €</strong></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aucune pénalité.</p>
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>🔔 Notifications</h2>
+    <a href="{{ url_for('ajouter_notification') }}" class="btn">➕ Ajouter une notification</a>
+  </div>
+
+</div>
+
+<footer>
+  <a href="{{ url_for('logout_bibliothecaire') }}" class="btn">🚪 Déconnexion</a>
+</footer>
+
+<!-- Bouton scroll to top -->
+<button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="scrollTopBtn">↑</button>
+
+<script>
+  window.onscroll = function() {
+    document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';
+  };
+</script>
+
+</body>
+</html>

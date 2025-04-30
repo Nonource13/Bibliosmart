@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Compte Lecteur</title>
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef2f7;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: #ffffff;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar h4 {
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #0078D7;
+    }
+
+    .sidebar a {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 0.5rem;
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      text-align: left;
+      border-radius: 6px;
+    }
+
+    .sidebar a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .logout a {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    /* Main Content */
+    .content {
+      flex-grow: 1;
+      padding: 2rem;
+    }
+
+    .content h2 {
+      color: #0078D7;
+      font-weight: 700;
+    }
+
+    .content p {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar text-center">
+    <!-- Avatar utilisateur -->
+    <img src="{{ url_for('static', filename='photo/avatar.png') }}" alt="Avatar">
+    <h4>{{ utilisateur.nom }}</h4>
+
+  <!-- ... tout rès la menm ... -->
+<a href="{{ url_for('reserver_livres') }}">📚 Réserver un livre</a>
+<a href="{{ url_for('emprunter_livres') }}">📖 Emprunter un livre</a>
+<a href="{{ url_for('consulter_livres') }}">🔍 Consulter les livres</a>
+<a href="{{ url_for('livres_empruntes') }}">↩️ Mes livres empruntés</a> <!-- ✅ CORRIGÉ -->
+<a href="{{ url_for('payer_amende') }}">💳 Payer une amende</a>
+<!-- ... rès la ... -->
+
+
+    <div class="logout mt-4">
+      <a href="{{ url_for('logout') }}">🔓 Se déconnecter</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <h2>Bienvenue {{ utilisateur.nom }} ! 👋</h2>
+    <p>Bienvenue dans votre espace personnel. Choisissez une action à gauche pour commencer.</p>
+  </div>
+
+</body>
+</html>

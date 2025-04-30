@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter une notification</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url("{{ url_for('static', filename='photo/back5.png') }}") no-repeat center center fixed;
+      background-size: cover;
+      padding: 40px;
+      margin: 0;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #1a237e;
+    }
+
+    form {
+      background-color: rgba(255, 255, 255, 0.88);
+      padding: 20px 24px;
+      border-radius: 10px;
+      max-width: 320px;
+      margin: 0 auto 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #1a237e;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0d154e;
+    }
+
+    .notifications {
+      max-width: 700px;
+      margin: auto;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .notif {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .notif:last-child {
+      border-bottom: none;
+    }
+
+    .notif h3 {
+      margin: 0;
+      color: #1a237e;
+    }
+
+    .notif p {
+      margin: 5px 0 0;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .back a {
+      text-decoration: none;
+      color: white;
+      background-color: #1a237e;
+      padding: 10px 20px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔔 Ajouter une notification</h1>
+
+  <form method="POST">
+    <input type="text" name="titre" placeholder="Titre de la notification" required>
+    <textarea name="contenu" placeholder="Contenu de la notification" rows="5" required></textarea>
+    <button type="submit">Publier</button>
+  </form>
+
+  <div class="notifications">
+    <h2>🗒 Notifications existantes</h2>
+    {% if notifications %}
+      {% for notif in notifications %}
+        <div class="notif">
+          <h3>{{ notif.titre }}</h3>
+          <p>{{ notif.contenu }}</p>
+          <small>📅 {{ notif.date.strftime('%d/%m/%Y %H:%M') }}</small>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Aucune notification publiée pour le moment.</p>
+    {% endif %}
+  </div>
+
+  <div class="back">
+    <a href="{{ url_for('espace_bibliothecaire') }}">⬅ Retour à l'espace bibliothécaire</a>
+  </div>
+
+</body>
+</html>

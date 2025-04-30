@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulter les Livres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            margin: 0 1rem;
+        }
+
+        .catalogue {
+            padding: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .livre-card {
+            background: white;
+            width: 250px;
+            padding: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .livre-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .livre-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .livre-card h3 {
+            font-size: 1.1rem;
+            margin: 0.5rem 0 0;
+        }
+
+        .livre-card p {
+            font-style: italic;
+            color: #444;
+            margin: 0;
+        }
+
+        .livre-card span {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+            <a href="#">M yo</a>
+            <a href="#">Nos livres</a>
+            <a href="#">Catégories</a>
+            <a href="#">Paiement</a>
+            <a href="#">Abonnement</a>
+            <a href="#">Recommandation</a>
+        </div>
+        <div>
+            <a href="{{ url_for('compte_lecteur', utilisateur_id=session.get('utilisateur_id')) }}">Mon compte</a>
+        </div>
+    </div>
+
+    <div class="catalogue">
+        {% for livre in livres %}
+        <div class="livre-card">
+            <img src="{{ url_for('static', filename='images/' + livre.image) }}" alt="Image de {{ livre.titre }}">
+            <h3>{{ livre.titre }}</h3>
+            <p>{{ livre.auteur }}</p>
+            <span>{{ livre.prix }} €</span>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

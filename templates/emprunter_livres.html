@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Livres Empruntés</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+  <style>
+    body {
+      background-color: #f3f6fb;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+    }
+    .livre-card {
+      background: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .livre-card h5 {
+      margin-bottom: 0.5rem;
+      color: #0078D7;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="mb-4">📖 Livres que vous avez empruntés, {{ utilisateur.nom }} :</h2>
+
+    {% if livres %}
+      {% for livre in livres %}
+        <div class="livre-card">
+          <h5>{{ livre.titre }}</h5>
+          <p>Auteur : {{ livre.auteur }}</p>
+          <p>Catégorie : {{ livre.categorie }}</p>
+          <p>Statut : <strong>{{ "En cours" if livre.disponible == False else "Rendu" }}</strong></p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Aucun livre emprunté pour le moment.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

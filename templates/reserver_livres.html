@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Réserver un Livre</title>
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <style>
+    body {
+      padding: 2rem;
+      background-color: #f5f7fb;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .book-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="mb-4 text-center">Livres disponibles à la réservation</h2>
+
+    <div class="row">
+      {% for livre in livres %}
+        <div class="col-md-4">
+          <div class="book-card">
+            <h5>{{ livre.titre }}</h5>
+            <p>Auteur : {{ livre.auteur }}</p>
+            <p>Catégorie : {{ livre.categorie }}</p>
+            {% if 'utilisateur_id' in session %}
+              <form method="POST" action="{{ url_for('reserver_livre', livre_id=livre.id) }}">
+                <button type="submit" class="btn btn-success btn-sm">Réserver</button>
+              </form>
+            {% else %}
+              <a href="{{ url_for('login_lecteur') }}" class="btn btn-warning btn-sm">Connectez-vous pour réserver</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>
